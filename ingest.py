@@ -1,7 +1,7 @@
-from langchain.document_loaders import PyPDFLoader, DirectoryLoader, PDFMinerLoader
+from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader, PDFMinerLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import SentenceTransformerEmbeddings
-from langchain.vectorstores import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.vectorstores import Chroma
 import os
 from constants import CHROMA_SETTINGS
 
@@ -18,16 +18,13 @@ def main():
     texts = text_spliter.split_documents(documents)
     
     #create embeddings here
-    embeddings = SentenceTransformerEmbeddings(model = "all-MiniLM-L6-v2")
+    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     
     #create vector store
-    db = Chroma.from_documents(texts, embeddings, persist_directory = persist_directory, 
-                               client_settings = CHROMA_SETTINGS)
+    db = Chroma.from_documents(texts, embeddings, persist_directory=persist_directory, 
+                               client_settings=CHROMA_SETTINGS)
     db.persist()
     db = None
     
 if __name__ == "__main__":
     main()
-    
-    
-    
